@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
   <div class="soundcloud-box">
-    <a :href="SelectedMusic.url" :title="'Listen to ' + SelectedMusic.media + ' - ' + SelectedMusic.title + 'on SoundCloud'" >
+    <a :href="SelectedMusic.url" :title="'Listen to ' + SelectedMusic.media + ' - ' + SelectedMusic.title + ' on YouTube'" >
       <div class="title-card" :won="isWon ? 'true' : 'false'">
         <div class="title">
           <p> {{ SelectedMusic.media }} </p>

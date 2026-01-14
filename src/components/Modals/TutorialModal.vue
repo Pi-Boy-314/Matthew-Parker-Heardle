@@ -37,7 +37,7 @@ onMounted(()=>{
         <IconThumbUp/>
       </div>
       <div>
-        <p>Answer in as few tries  as possible and share your score!</p>
+        <p>Answer in as few tries as possible and share your score!</p>
       </div>
     </div>
     <div class="button-container font-medium">

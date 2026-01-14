@@ -1,53 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import './base.css';
 
-@font-face {
-    font-family: bigfont;
-    src: url("@/assets/fonts/bigfont.otf") format("opentype");
-}
-
-@font-face {
-    font-family: mediumfont;
-    src: url("@/assets/fonts/mediumfont.otf") format("opentype");
-}
-
-@font-face {
-    font-family: smallfont;
-    src: url("@/assets/fonts/smallfont.otf") format("opentype");
-}
-
-@font-face {
-    font-family: titlefont;
-    src: url("@/assets/fonts/titlefont.otf") format("opentype");
-}
+/* Original custom font faces removed to use Montserrat instead */
 
 .font-title {
-    font-family: titlefont,serif;
+    font-family: 'Montserrat', serif;
     font-size: 2.75rem;
     line-height: 2.75rem;
 
     font-style: italic;
+    font-weight: 700;
 }
 
 .font-big {
-    font-family: mediumfont,serif;
+    font-family: 'Montserrat', serif;
     font-size: 1.75rem;
     line-height: 1.6rem;
 }
 
 .font-medium {
-    font-family: bigfont,serif;
+    font-family: 'Montserrat', serif;
     font-size: 1.5rem;
     line-height: 1.4rem;
 }
 
 .font-input {
-    font-family: smallfont,serif;
+    font-family: 'Montserrat', serif;
     font-size: 1.2rem;
     line-height: 1.1rem;
 }
 
 body, .font-small {
-    font-family: smallfont,serif;
+    font-family: 'Montserrat', serif;
     font-size: 1.1rem;
     line-height: 1.1rem;
 }
@@ -94,7 +78,7 @@ button {
     text-indent: 0.25em;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    font-weight: 10;
+    font-weight: 700;
 
     font-size: 1.75rem;
     line-height: 1.3rem;
@@ -108,6 +92,7 @@ button {
     color: #ffffff;
 
     margin: 0;
+    font-family: 'Montserrat', sans-serif;
 }
 button:disabled {
     color: #999999;
@@ -137,7 +122,7 @@ input,
 button,
 select,
 textarea {
-    font-family: inherit;
+    font-family: 'Montserrat', sans-serif;
     font-size: inherit;
     -webkit-padding: 0.4em 0;
     padding: 0.4em;

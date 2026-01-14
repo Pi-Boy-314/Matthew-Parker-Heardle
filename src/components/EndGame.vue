@@ -2,7 +2,6 @@
 
 import SoundcloudMusicLink from "@/components/SoundcloudMusicLink.vue";
 import GuessSummary from "@/components/GuessSummary.vue";
-import InfiniteButton from "@/components/InfiniteButton.vue";
 import IconShare from "@/components/icons/IconShare.vue";
 
 import settings from "@/settings/settings.json"
@@ -44,36 +43,33 @@ setInterval(()=>{
 
 <template>
   <div class="max-w-screen-sm main-container">
-    <SoundcloudMusicLink :is-won="currentGameState.guessed[currentGameState.guessed.length-1].isCorrect"/>
-    <div class="summary-container">
-      <p class="guess-number font-big"> {{ currentGameState.guessed[currentGameState.guessed.length-1].isCorrect ? currentGameState.guessed.length.toString() : '0' }} </p>
-      <GuessSummary class="summary"/>
-      <p class="second-text" v-if="currentGameState.guessed[currentGameState.guessed.length-1].isCorrect">
-        {{ ParseStringWithVariable((settings["infinite"] ? settings["phrases"]["infinite-win-text"] : settings["phrases"]["default-win-text"])) }}
-      </p>
-      <p class="second-text" v-else>
-        {{ ParseStringWithVariable((settings["infinite"] ? settings["phrases"]["infinite-lose-text"] : settings["phrases"]["default-lose-text"])) }}
-      </p>
-      <div class="share">
-        <button class="font-medium">
-          {{ ParseStringWithVariable(settings["phrases"]["share-button"]) }}
-          <IconShare class="inline-block ml-2"/>
-        </button>
+    <div v-if="currentGameState.guessed.length > 0">
+      <SoundcloudMusicLink :is-won="currentGameState.guessed[currentGameState.guessed.length-1].isCorrect"/>
+      
+      <div class="summary-container">
+        <p class="guess-number font-big"> 
+          {{ currentGameState.guessed[currentGameState.guessed.length-1].isCorrect ? currentGameState.guessed.length.toString() : '0' }} 
+        </p>
+        <GuessSummary class="summary"/>
+        <div class="share">
+          <button class="font-medium">
+            {{ ParseStringWithVariable(settings["phrases"]["share-button"]) }}
+            <IconShare class="inline-block ml-2"/>
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="timer-container">
-        <div class="next-text font-medium"> {{ ParseStringWithVariable(settings["phrases"]["timer-text"]) }} </div>
+
+      <div class="timer-container">
+        <div class="next-text font-medium"> 
+          {{ ParseStringWithVariable(settings["phrases"]["timer-text"]) }} 
+        </div>
         <div id="timer" class="font-big">14:25:42</div>
       </div>
-    <div v-if="!settings['infinite']">
-      <div class="infinite-button-container">
-        <div class="margin"></div>
-       <InfiniteButton/>
-      </div>
-    </div>
-    <div v-else>
+    </div> <div v-else>
       <div class="next-button-container">
-        <button class="font-medium" onclick="window.location.reload()"> {{ ParseStringWithVariable(settings["phrases"]["next-button"]) }} </button>
+        <button class="font-medium" onclick="window.location.reload()"> 
+          {{ ParseStringWithVariable(settings["phrases"]["next-button"]) }} 
+        </button>
       </div>
     </div>
   </div>
@@ -135,20 +131,6 @@ setInterval(()=>{
 
       background-color: var(--color-positive);
     }
-  }
-}
-
-.infinite-button-container{
-  background: var(--color-highlight);
-  padding: 0.75rem 0 1.25rem;
-  margin: 0 0.75rem;
-
-  border-top-left-radius: 0.375rem;
-  border-top-right-radius: 0.375rem;
-
-  .margin {
-    display: flex;
-    margin-bottom: 0.75rem;
   }
 }
 

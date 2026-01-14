@@ -1,5 +1,5 @@
 {
-  "heardle-name": "Kirby Air Ride",
+  "heardle-name": "Sam Bowman",
   "guess-number": 6,
   "times": [
     1, 2, 4, 8, 16, 32
@@ -66,7 +66,7 @@
     "next-button": "Next",
     "share-button": "Share",
 
-    "infinite-win-text": "Poyoo!! You got the {heardle-name} song within {unlocked-time} seconds.",
+    "infinite-win-text": "Huzzah! You got the {heardle-name} song within {unlocked-time} seconds.",
     "default-win-text": "You got today's {heardle-name} Heardle within {unlocked-time} seconds.",
 
     "infinite-lose-text": "You didn't get the {heardle-name} song. Too bad, you can always try again!",
@@ -77,5 +77,5 @@
 
   "!COMMENT!": "Variant link is  \"infinite\" when infinite is false, or \"base game\" when infinite is true",
   "variant-link": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-  "song-list-link": "https://raw.githubusercontent.com/s4pph1r3-dev/Heardle-Base/refs/heads/main/src/settings/music.json"
+  "song-list-link": "https://raw.githubusercontent.com/pi-boy-314/sam-bowman-heardle/refs/heads/main/src/settings/music.json"
 }
