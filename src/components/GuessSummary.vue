@@ -30,7 +30,7 @@ function getType(i: number) : String{
 
 .guess-value {
   width: 1rem;
-  height: 0.25rem;
+  height: 1rem;
   margin: 0.125rem;
 
   &[type=success]{

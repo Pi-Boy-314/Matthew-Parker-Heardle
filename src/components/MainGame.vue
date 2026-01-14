@@ -21,14 +21,6 @@ import { currentGameState, ParseStringWithVariable } from "@/main";
       </div>
     </div>
   </div>
-  <div class="list-text font-medium" v-if="settings['song-list-link'] !== '' && settings['song-list-link'] !== null && settings['song-list-link'] !== undefined" >
-    <p>
-      <a :href="settings['song-list-link']">
-        {{ ParseStringWithVariable(settings["phrases"]["song-list"])  }} <br/>
-        <IconArrowDown class="arrow"/>
-      </a>
-    </p>
-  </div>
   <TransportBar/>
   <GuessBar/>
 </template>

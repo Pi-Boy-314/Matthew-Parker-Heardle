@@ -9,10 +9,10 @@ const props = defineProps({
 
 <template>
   <div class="soundcloud-box">
-    <a :href="SelectedMusic.url" :title="'Listen to ' + SelectedMusic.media + ' - ' + SelectedMusic.title + ' on YouTube'" >
+    <a :href="SelectedMusic.url" :title="'Listen to ' + SelectedMusic.title + ' on YouTube'" >
       <div class="title-card" :won="isWon ? 'true' : 'false'">
+        <img v-if="SelectedMusic.art" :src="SelectedMusic.art" alt="Album art" class="album-art">
         <div class="title">
-          <p> {{ SelectedMusic.media }} </p>
           <p class="title-text font-medium"> {{ SelectedMusic.title }} </p>
         </div>
         <SoundcloudLogo/>
@@ -49,9 +49,25 @@ const props = defineProps({
       margin-left: 0.75rem;
       margin-right: 0.75rem;
 
+      p {
+        margin-bottom: 0.25rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
       .title-text{
         line-height: 1.3rem;
       }
+    }
+
+    .album-art {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      object-fit: cover;
+      margin-right: 0.5rem;
     }
   }
 }

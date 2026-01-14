@@ -74,18 +74,36 @@ export const _currentGameState = ref({
 let listIndex = 0;
 let id = 0;
 
-const shuffledMusic = music;
+const shuffledMusic = music.slice();
+
+// Create a single deterministic permutation of the music list so each song
+// appears once per cycle (no repeats within a cycle). The seed is derived
+// from `settings.start-date` (days since epoch) to keep the ordering stable.
+const globalSeed = Math.floor((settings["start-date"] ? new Date(settings["start-date"]).getTime() : 0) / 86400000);
+shuffle(shuffledMusic, globalSeed);
 
 if(settings["infinite"]){
     listIndex = Math.round(Math.random() * (music.length-1));
 
 } else {
-    const oldestDate = new Date(null);
-    const currentDate = new Date();
+        const currentDate = new Date();
 
-    id = Math.floor((currentDate.getTime() - oldestDate.getTime()) / 86400000);
+        function daysSinceStartInCT(startISO) {
+            const now = new Date();
+            const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'numeric', day: 'numeric' });
+            const partsNow = fmt.formatToParts(now).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
 
-    listIndex = id % music.length;
+            const startDate = startISO ? new Date(startISO) : new Date(0);
+            const partsStart = fmt.formatToParts(startDate).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
+
+            const nowMidCTUtc = Date.UTC(Number(partsNow.year), Number(partsNow.month) - 1, Number(partsNow.day));
+            const startMidCTUtc = Date.UTC(Number(partsStart.year), Number(partsStart.month) - 1, Number(partsStart.day));
+
+            return Math.floor((nowMidCTUtc - startMidCTUtc) / 86400000);
+        }
+
+        id = daysSinceStartInCT(settings["start-date"]);
+        listIndex = id % music.length;
 
     const usString = localStorage.getItem("userStats");
     if(usString !== null && usString !== ""){
@@ -101,7 +119,8 @@ if(settings["infinite"]){
         }
     }
 
-    shuffle(shuffledMusic, Math.floor(id / music.length))
+    // previously shuffled per-block; keep the single global shuffle above
+    // so the order is random-looking but each song appears exactly once per cycle
 }
 
 export const SelectedMusic = shuffledMusic[listIndex];

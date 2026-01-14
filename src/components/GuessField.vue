@@ -6,7 +6,7 @@ import IconEmptyBox from "@/components/icons/IconEmptyBox.vue";
 
 const props = defineProps<{
   active?: boolean;
-  music?: { name: string, "equal-to": {"title": string, "url": string, "tags": []} };
+  music?: { name: string, "equal-to": {"title": string, "url": string, "tags": []}, isCorrect: boolean };
 }>();
 
 console.log("")
@@ -25,7 +25,7 @@ console.log("")
       <div class="skipped" v-else >  {{ ParseStringWithVariable(settings["phrases"]["skipped"]) }}  </div>
     </div>
 
-    <div style="max-width: 60%;" v-if="music != undefined && music['equal-to'] != undefined">
+    <div style="max-width: 60%;" v-if="music != undefined && music['equal-to'] != undefined && music.isCorrect">
       <div>
         <div v-for="tag in settings['tag-list']">
           {{ tag["display-name"] }}:

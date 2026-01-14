@@ -24,7 +24,10 @@ const emit = defineEmits(['create-modal']);
             <IconHeart/>
           </button>
         </div>
-        <h1 class="font-title">{{ settings["heardle-name"] }} Heardle</h1>
+        <h1 class="font-title">
+          <span>{{ settings["heardle-name"] }}</span><br/>
+          Heardle
+        </h1>
         <div class="button-container justify-end">
           <button @click="emit('create-modal', TutorialModal)">
             <IconAbout/>
@@ -37,9 +40,6 @@ const emit = defineEmits(['create-modal']);
 
 <style scoped lang="scss">
   header {
-    border-style: solid;
-    border-color: var(--color-line);
-    border-bottom-width: 1px;
   }
 
   .main-container{
@@ -48,6 +48,9 @@ const emit = defineEmits(['create-modal']);
     color: var(--color-fg);
     padding: 0.75rem;
     align-items: center;
+    border-style: solid;
+    border-color: var(--color-line);
+    border-bottom-width: 1px;
   }
 
   .button-container {

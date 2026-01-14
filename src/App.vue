@@ -6,7 +6,6 @@ import {onMounted, onBeforeUnmount, ref, shallowRef} from "vue";
 import TutorialModal from "@/components/Modals/TutorialModal.vue";
 
 // Vue Binding References
-const style = ref("height:" + window.innerHeight + "px;")
 const showModal = ref(false);
 const currentModal = shallowRef(null);
 
@@ -31,8 +30,6 @@ function closeModal() {
 }
 
 onMounted(() => {
-  window.addEventListener('resize', ()=>style.value = "height:" + window.innerHeight + "px;");
-
   let r = document.querySelector(':root');
 
   for (let theme in themes) {
@@ -58,13 +55,12 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', ()=>style.value = "height:" + window.innerHeight + "px;");
 });
 
 </script>
 
 <template>
-  <main id='main' :style="style">
+  <main id='main'>
     <ModalBase v-if="showModal" @close="closeModal">
       <component :is="currentModal" />
     </ModalBase>
@@ -81,7 +77,8 @@ main {
   background: var(--color-bg);
   color: var(--color-fg);
 
-  overflow: auto;
+  height: 100vh;
+  overflow: hidden;
 
   display: flex;
 

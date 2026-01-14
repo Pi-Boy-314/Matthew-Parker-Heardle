@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {onMounted, onUnmounted, ref} from "vue";
 import IconPlay from "@/components/icons/IconPlay.vue";
-import IconVolume from "@/components/icons/IconVolume.vue";
 import IconPlaying from "@/components/icons/IconPlaying.vue";
 
 import settings from "@/settings/settings.json"
@@ -18,8 +17,6 @@ let player: Player;
 let isFinished = ref(false);
 
 let lengthInSecond = ref(0);
-
-let muted = ref(false);
 
 let seekBarInterval = setInterval(() => {
   const sb = document.getElementById('seekbar');
@@ -147,27 +144,6 @@ function getUnlockedBarWidth() : number{
   return settings.separator[currentGameState.value.guess];
 }
 
-function changeVolume(e: InputEvent){
-  player.SetVolume(e.target.value);
-  muted.value = false;
-
-  if(e.target.value <= 0){
-    muted.value = true;
-  }
-}
-
-function mute(){
-  if(muted.value){
-    muted.value = false;
-    player.SetVolume(50);
-    document.getElementById("slider").value = 50;
-  } else {
-    muted.value = true;
-    player.SetVolume(0);
-    document.getElementById("slider").value = 0;
-  }
-}
-
 </script>
 
 <template>
@@ -189,17 +165,9 @@ function mute(){
   <div class="transport">
     <div class="max-w-screen-sm">
       <div class="transport-container">
-        <div class="container with-volume">
+        <div class="container">
           <div class="item1" v-if="!isPlaying">0:00</div>
           <div class="item1" v-else> </div>
-          <div class="item2">
-            <button @click="mute">
-              <IconVolume :muted="muted"/>
-            </button>
-            <div class="volume-control">
-              <input id="slider" type="range" min="0" max="100" name="volume" @input="changeVolume">
-            </div>
-          </div>
           <div class="item3">
             <button id="play-button" @click="ButtonClick">
               <div class="border">
@@ -221,8 +189,6 @@ function mute(){
 
 <style scoped>
 .playbar {
-  border-color: var(--color-line);
-  border-top-width: 1px;
 }
 
 #seekbar {
@@ -238,6 +204,10 @@ function mute(){
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+
+  border-top-width: 1px;
+  border-color: var(--color-line);
+  border-style: solid;
 
   .bar-grid{
     overflow: hidden;
@@ -279,9 +249,6 @@ function mute(){
 }
 
 .transport{
-  border-color: var(--color-line);
-  border-top-width: 1px;
-
   width: 100%;
 
   .max-w-screen-sm{
@@ -292,74 +259,22 @@ function mute(){
   .transport-container {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+    border-top-width: 1px;
+    border-color: var(--color-line);
+    border-style: solid;
   }
-}
-
-.container.with-volume {
-  grid-template-columns: 3fr 4fr 7fr 7fr;
 }
 
 .container {
   display: grid;
-  grid-template-columns: 3fr 4fr 7fr 7fr;
-  gap: 10px;
+  grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
+  padding: 0.75rem 0;
 }
 
 .item1 {
   align-items: center;
   display: flex;
-}
-.item2 {
-  display: flex;
-  align-items: center;
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    border: none;
-
-    padding: 0;
-    margin-bottom: 0;
-  }
-
-  .volume-control{
-    width: 100px;
-    position: relative;
-
-
-    #slider{
-      height: 10px;
-      background-color: grey;
-      border-radius: 2px;
-      border: none;
-      width: 100px;
-
-      accent-color: var(--color-fg);
-
-      padding: 0;
-      margin: 0;
-
-      &::-moz-range-thumb, &::-webkit-slider-thumb/*, &::-ms-thumb*/ {
-        padding: 0;
-        margin: 0;
-
-        background-color: var(--color-fg);
-      }
-
-      &::-moz-range-progress/*, &::-ms-fill*/{
-        background-color: var(--color-fg);
-        padding: 0;
-        margin: 0;
-
-        height: 100%;
-      }
-
-
-    }
-  }
 }
 .item3 {
   display: flex;
@@ -428,13 +343,13 @@ function mute(){
 
 <style>
 .separator {
-  background-color: var(--color-mg);
+  background-color: white;
   width: 1px;
   height: 100%;
   position: absolute;
 }
 
 .sep-selected{
-  background-color: var(--color-line);
+  background-color: white;
 }
 </style>
