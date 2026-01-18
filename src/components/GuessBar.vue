@@ -15,19 +15,26 @@ const searcher = new FuzzySearch(music, ["title", "album"], {
 });
 
 onMounted(() => {
-  document.getElementById("main").onclick = () => {
-    const autoCompleteList = document.getElementById('autoComplete_list')
-    if(autoCompleteList != null)
-      autoCompleteList.setAttribute("hidden", "");
+  const mainEl = document.getElementById("main");
+  if (mainEl) {
+    mainEl.onclick = () => {
+      const autoCompleteList = document.getElementById('autoComplete_list');
+      if (autoCompleteList != null)
+        autoCompleteList.setAttribute("hidden", "");
+    };
   }
 })
 
 function GetAutocomplete(){
-  document.getElementById('autoComplete_list').removeAttribute('hidden');
+  const listEl = document.getElementById('autoComplete_list');
+  if (listEl) listEl.removeAttribute('hidden');
 
-  const result = searcher.search(document.getElementById("autoComplete").value);
+  const inputEl = document.getElementById("autoComplete") as HTMLInputElement | null;
+  const query = inputEl?.value ?? "";
+  const result = searcher.search(query);
 
-  const autoCompleteList = document.getElementById("autoComplete_list");
+  const autoCompleteList = document.getElementById("autoComplete_list") as HTMLElement | null;
+  if (!autoCompleteList) return;
   autoCompleteList.innerHTML = "";
 
   for(const item of result){
@@ -36,7 +43,7 @@ function GetAutocomplete(){
 
     li.onclick = ()=>{
       autoCompleteList.setAttribute("hidden", "");
-      document.getElementById("autoComplete").value = item.title + " — " + item.album;
+      if (inputEl) inputEl.value = item.title + " — " + item.album;
     }
 
     autoCompleteList.appendChild(li);
@@ -44,23 +51,24 @@ function GetAutocomplete(){
 }
 
 function OnSubmit(){
-  if(document.getElementById("autoComplete").value === undefined || document.getElementById("autoComplete").value === "") {
+  const inputEl = document.getElementById("autoComplete") as HTMLInputElement | null;
+  if(!inputEl || inputEl.value === "") {
     return;
   }
 
   let equalto = music.find((el)=>{
-    return (el.title + " — " + el.album) == document.getElementById("autoComplete").value;
+    return (el.title + " — " + el.album) === inputEl.value;
   })
 
   currentGameState.value.guessed.push(
       {
-        "name": document.getElementById("autoComplete").value,
+        "name": inputEl.value,
         "equal-to": equalto,
         "isCorrect": equalto === (SelectedMusic)
       }
   )
 
-  document.getElementById("autoComplete").value = ""
+  inputEl.value = "";
 
   Verify();
 }
@@ -74,7 +82,8 @@ function OnSkip(){
       }
   )
 
-  document.getElementById("autoComplete").value = ""
+  const inputEl = document.getElementById("autoComplete") as HTMLInputElement | null;
+  if (inputEl) inputEl.value = "";
 
   Verify();
 }
