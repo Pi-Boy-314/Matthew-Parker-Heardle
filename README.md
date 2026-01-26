@@ -3,7 +3,7 @@ A version of [Sam-Bowman-Heardle](https://github.com/Pi-Boy-314/Sam-Bowman-Heard
 
 ## Updates/Changes Made
 - Features Matthew Parker's music
-- Improved process for adapting Heardles to other artists (see scripts folder)git push -u origin main
+- Improved process for adapting Heardles to other artists (see scripts folder)
 
 ## Project Setup
 
