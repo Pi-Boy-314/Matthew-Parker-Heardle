@@ -18,6 +18,10 @@ function normalizeText(text: string): string {
     .replace(/[Üü]/g, 'U')
     .replace(/[Öö]/g, 'O')
     .replace(/[Ää]/g, 'A')
+    .replace(/['']/g, "'") // Normalize smart quotes/apostrophes
+    .replace(/[♥‿]/g, '') // Remove heart/face emoticons
+    .replace(/[><_]/g, '') // Remove emoticon symbols
+    .replace(/[~]/g, '') // Remove tildes
     .toLowerCase();
 }
 
