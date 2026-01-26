@@ -5,6 +5,7 @@ import App from './App.vue'
 
 import settings from '@/settings/settings.json'
 import music from '@/settings/music.json'
+import { STATS_KEY } from '@/utils/stats'
 
 // Create audio players
 
@@ -88,24 +89,24 @@ if(settings["infinite"]){
 } else {
         const currentDate = new Date();
 
-        function daysSinceStartInCT(startISO) {
+        function daysSinceStartInET(startISO) {
             const now = new Date();
-            const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'numeric', day: 'numeric' });
+            const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'numeric', day: 'numeric' });
             const partsNow = fmt.formatToParts(now).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
 
             const startDate = startISO ? new Date(startISO) : new Date(0);
             const partsStart = fmt.formatToParts(startDate).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
 
-            const nowMidCTUtc = Date.UTC(Number(partsNow.year), Number(partsNow.month) - 1, Number(partsNow.day));
-            const startMidCTUtc = Date.UTC(Number(partsStart.year), Number(partsStart.month) - 1, Number(partsStart.day));
+            const nowMidETUtc = Date.UTC(Number(partsNow.year), Number(partsNow.month) - 1, Number(partsNow.day));
+            const startMidETUtc = Date.UTC(Number(partsStart.year), Number(partsStart.month) - 1, Number(partsStart.day));
 
-            return Math.floor((nowMidCTUtc - startMidCTUtc) / 86400000);
+            return Math.floor((nowMidETUtc - startMidETUtc) / 86400000);
         }
 
-        id = daysSinceStartInCT(settings["start-date"]);
+        id = daysSinceStartInET(settings["start-date"]);
         listIndex = id % music.length;
 
-    const usString = localStorage.getItem("userStats");
+    const usString = localStorage.getItem(STATS_KEY);
     if(usString !== null && usString !== ""){
         let stats = JSON.parse(usString);
         let item = stats.find((item)=>{
@@ -127,7 +128,7 @@ export const SelectedMusic = shuffledMusic[listIndex];
 
 function save(){
     if(!settings["infinite"]){
-        const usString = localStorage.getItem("userStats");
+        const usString = localStorage.getItem(STATS_KEY);
         let stats;
 
         console.log("Set used");
@@ -158,7 +159,7 @@ function save(){
             };
         }
 
-        localStorage.setItem("userStats", JSON.stringify(stats));
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
     }
 }
 

@@ -1,7 +1,8 @@
 // src/utils/stats.js
 // Utility for tracking and updating game stats in localStorage
 
-const STATS_KEY = 'userStats';
+// Storage key is namespaced so forks on the same domain don't share stats
+export const STATS_KEY = 'userStats:MatthewParkerHeardle';
 
 export function getStats() {
   const stats = localStorage.getItem(STATS_KEY);

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import settings from "@/settings/settings.json";
+import { STATS_KEY } from "@/utils/stats";
 
 const guessDistribution = ref<number[]>([]);
 const maxGuesses = ref(0);
@@ -19,7 +20,7 @@ onMounted(() => {
 function calculateAverageGuesses() {
   const statDistribution = Array(settings["guess-number"] + 1).fill(0);
 
-  const stats = localStorage.getItem("userStats");
+  const stats = localStorage.getItem(STATS_KEY);
   if (!stats) return statDistribution;
 
   const parsedStats = JSON.parse(stats);
@@ -32,7 +33,7 @@ function calculateAverageGuesses() {
 }
 
 function calculateStreaks() {
-  const stats = localStorage.getItem("userStats");
+  const stats = localStorage.getItem(STATS_KEY);
   if (!stats) return;
 
   const parsedStats = JSON.parse(stats);
