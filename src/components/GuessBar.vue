@@ -10,7 +10,25 @@ import settings from "@/settings/settings.json"
 import { currentGameState, SelectedMusic, ParseStringWithVariable } from "@/main";
 import {onMounted} from "vue";
 
-const searcher = new FuzzySearch(music, ["title", "album"], {
+// Normalize special characters to ASCII equivalents for search
+function normalizeText(text: string): string {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+    .replace(/[Üü]/g, 'U')
+    .replace(/[Öö]/g, 'O')
+    .replace(/[Ää]/g, 'A')
+    .toLowerCase();
+}
+
+// Create a searchable version of the music list with normalized text
+const searchableMusic = music.map(item => ({
+  ...item,
+  normalizedTitle: normalizeText(item.title),
+  normalizedAlbum: normalizeText(item.album)
+}));
+
+const searcher = new FuzzySearch(searchableMusic, ["normalizedTitle", "normalizedAlbum"], {
   sort: true
 });
 
@@ -31,7 +49,8 @@ function GetAutocomplete(){
 
   const inputEl = document.getElementById("autoComplete") as HTMLInputElement | null;
   const query = inputEl?.value ?? "";
-  const result = searcher.search(query);
+  const normalizedQuery = normalizeText(query);
+  const result = searcher.search(normalizedQuery);
 
   const autoCompleteList = document.getElementById("autoComplete_list") as HTMLElement | null;
   if (!autoCompleteList) return;
