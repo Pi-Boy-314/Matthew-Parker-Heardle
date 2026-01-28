@@ -7,31 +7,22 @@ import FuzzySearch from "fuzzy-search";
 import music from "@/settings/music.json"
 import settings from "@/settings/settings.json"
 
-import { currentGameState, SelectedMusic, ParseStringWithVariable } from "@/main";
+import { currentGameState, SelectedMusic, ParseStringWithVariable } from "@/main.js";
 import {onMounted} from "vue";
 
-// Normalize special characters to ASCII equivalents for search
+// Normalize Unicode characters for searching (e.g., Ü -> U, é -> e)
 function normalizeText(text: string): string {
-  return text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-    .replace(/[Üü]/g, 'U')
-    .replace(/[Öö]/g, 'O')
-    .replace(/[Ää]/g, 'A')
-    .replace(/[♥‿]/g, '') // Remove heart/face emoticons
-    .replace(/[><_]/g, '') // Remove emoticon symbols
-    .replace(/[~]/g, '') // Remove tildes
-    .toLowerCase();
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-// Create a searchable version of the music list with normalized text
-const searchableMusic = music.map(item => ({
+// Create enhanced music data with normalized search fields
+const musicWithNormalized = music.map(item => ({
   ...item,
-  normalizedTitle: normalizeText(item.title),
-  normalizedAlbum: normalizeText(item.album)
+  titleNormalized: normalizeText(item.title),
+  albumNormalized: normalizeText(item.album)
 }));
 
-const searcher = new FuzzySearch(searchableMusic, ["normalizedTitle", "normalizedAlbum"], {
+const searcher = new FuzzySearch(musicWithNormalized, ["titleNormalized", "albumNormalized"], {
   sort: true
 });
 
