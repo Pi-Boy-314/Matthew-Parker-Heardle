@@ -34,13 +34,13 @@ export class SoundcloudPlayer extends Player {
         this.Widget.setVolume(this.Volume)
     }
 
-    override PlayMusicUntilEnd(started_callback: () => void | null, finished_callback: () => void | null): void
+    PlayMusicUntilEnd(started_callback: () => void | null, finished_callback: () => void | null): void
     {
         if(started_callback != null) started_callback();
         this.Widget.play();
     }
 
-    override PlayMusic(timer: number, started_callback: () => void | null, finished_callback: () => void | null): void
+    PlayMusic(timer: number, started_callback: () => void | null, finished_callback: () => void | null): void
     {
         this.Widget.play();
 
@@ -62,13 +62,13 @@ export class SoundcloudPlayer extends Player {
         this.Widget.bind(SC.Widget.Events.PLAY, onPlay);
     }
 
-    override StopMusic(): void
+    StopMusic(): void
     {
         this.Widget.pause();
         this.Widget.seekTo(0);
     }
 
-    override async GetCurrentMusicTime(callback: (percentage: number)=>void)
+    async GetCurrentMusicTime(callback: (percentage: number)=>void)
     {
         if(!this.Playing) callback(0);
 
@@ -77,18 +77,18 @@ export class SoundcloudPlayer extends Player {
         })
     }
 
-    override async GetCurrentMusicLength(callback: (length: number)=>void)
+    async GetCurrentMusicLength(callback: (length: number)=>void)
     {
         this.Widget.getDuration((n: number)=>{
             callback(n);
         });
     }
 
-    override GetVolume(): number {
+    GetVolume(): number {
         return this.Volume;
     }
 
-    override SetVolume(volume: number): void {
+    SetVolume(volume: number): void {
         this.Volume = volume;
         this.Widget.setVolume(volume)
     }

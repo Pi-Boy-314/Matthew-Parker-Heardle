@@ -66,7 +66,7 @@ export class LocalAudioPlayer extends Player {
         }
     }
 
-    override PlayMusicUntilEnd(started_callback: () => void | null, finished_callback: () => void | null): void {
+    PlayMusicUntilEnd(started_callback: () => void | null, finished_callback: () => void | null): void {
         let hasStarted = false;
 
         const onPlay = () => {
@@ -91,9 +91,9 @@ export class LocalAudioPlayer extends Player {
         this.audio.play().catch(e => console.log('Audio play failed:', e));
     }
 
-    override PlayMusic(timer: number, started_callback: () => void | null, finished_callback: () => void | null): void {
+    PlayMusic(timer: number, started_callback: () => void | null, finished_callback: () => void | null): void {
         let hasStarted = false;
-        let timeoutId: NodeJS.Timeout;
+        let timeoutId: ReturnType<typeof setTimeout>;
 
         const onPlay = () => {
             if (!hasStarted) {
@@ -121,14 +121,14 @@ export class LocalAudioPlayer extends Player {
         this.audio.play().catch(e => console.log('Audio play failed:', e));
     }
 
-    override StopMusic(): void {
+    StopMusic(): void {
         this.audio.pause();
         if (this.startSeconds > 0) {
             this.audio.currentTime = this.startSeconds;
         }
     }
 
-    override async GetCurrentMusicTime(callback: (percentage: number) => void) {
+    async GetCurrentMusicTime(callback: (percentage: number) => void) {
         if (!this.Playing) {
             callback(0);
             return;
@@ -138,7 +138,7 @@ export class LocalAudioPlayer extends Player {
         callback(adjustedMs);
     }
 
-    override async GetCurrentMusicLength(callback: (length: number) => void) {
+    async GetCurrentMusicLength(callback: (length: number) => void) {
         if (this.audio.duration && !isNaN(this.audio.duration)) {
             const adjustedMs = Math.max(0, (this.audio.duration - this.startSeconds) * 1000);
             callback(adjustedMs);
@@ -151,11 +151,11 @@ export class LocalAudioPlayer extends Player {
         }
     }
 
-    override GetVolume(): number {
+    GetVolume(): number {
         return this.Volume;
     }
 
-    override SetVolume(volume: number): void {
+    SetVolume(volume: number): void {
         this.Volume = volume;
         this.audio.volume = volume / 100;
     }
