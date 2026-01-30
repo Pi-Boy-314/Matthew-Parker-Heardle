@@ -40,21 +40,21 @@ async function share() {
   const guesses = guessed.length;
   const won = guesses > 0 && guessed[guesses - 1].isCorrect;
 
-  // Compute today's day id and listIndex using Central Time (same logic as main.js)
-  function daysSinceStartInCT(startISO) {
-    const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'numeric', day: 'numeric' });
+  // Compute today's day id and listIndex using Eastern Time (same logic as main.js)
+  function daysSinceStartInET(startISO) {
+    const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'numeric', day: 'numeric' });
     const partsNow = fmt.formatToParts(new Date()).reduce((acc: Record<string, string>, p) => { acc[p.type] = p.value; return acc; }, {});
 
     const startDate = startISO ? new Date(startISO) : new Date(0);
     const partsStart = fmt.formatToParts(startDate).reduce((acc: Record<string, string>, p) => { acc[p.type] = p.value; return acc; }, {});
 
-    const nowMidCTUtc = Date.UTC(Number(partsNow.year), Number(partsNow.month) - 1, Number(partsNow.day));
-    const startMidCTUtc = Date.UTC(Number(partsStart.year), Number(partsStart.month) - 1, Number(partsStart.day));
+    const nowMidETUtc = Date.UTC(Number(partsNow.year), Number(partsNow.month) - 1, Number(partsNow.day));
+    const startMidETUtc = Date.UTC(Number(partsStart.year), Number(partsStart.month) - 1, Number(partsStart.day));
 
-    return Math.floor((nowMidCTUtc - startMidCTUtc) / 86400000);
+    return Math.floor((nowMidETUtc - startMidETUtc) / 86400000);
   }
 
-  const id = daysSinceStartInCT(settings["start-date"]);
+  const id = daysSinceStartInET(settings["start-date"]);
   const listIndex = id % music.length;
 
   // build emoji pattern (🟩 green for correct, 🟥 red for incorrect, ⬛ gray for skip, ⬜ white for unused)
@@ -99,32 +99,32 @@ async function share() {
 setInterval(()=>{
   const timer = document.getElementById("timer");
 
-  // Get current time and tomorrow's date in Central Time
+  // Get current time and tomorrow's date in Eastern Time
   const now = new Date();
-  const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+  const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
   
-  // Get tomorrow in CT by adding 24 hours and getting the date parts
+  // Get tomorrow in ET by adding 24 hours and getting the date parts
   const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
   const partsTomorrow = fmt.formatToParts(tomorrow).reduce((acc: Record<string, string>, p) => { acc[p.type] = p.value; return acc; }, {});
   
-  // Construct midnight tomorrow in CT as a UTC timestamp
-  const tomorrowMidnightCTUtc = Date.UTC(Number(partsTomorrow.year), Number(partsTomorrow.month) - 1, Number(partsTomorrow.day), 6, 0, 0, 0); // CT is UTC-6 (CST) or UTC-5 (CDT)
+  // Construct midnight tomorrow in ET as a UTC timestamp
+  const tomorrowMidnightETUtc = Date.UTC(Number(partsTomorrow.year), Number(partsTomorrow.month) - 1, Number(partsTomorrow.day), 5, 0, 0, 0); // ET is UTC-5 (EST) or UTC-4 (EDT)
   
-  // To get the correct offset, we need to create a date at midnight CT and check its UTC equivalent
-  // Create a formatter that gives us the time components in CT
-  const fmtTime = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
-  const partsNowCT = fmtTime.formatToParts(now).reduce((acc: Record<string, string>, p) => { acc[p.type] = p.value; return acc; }, {});
+  // To get the correct offset, we need to create a date at midnight ET and check its UTC equivalent
+  // Create a formatter that gives us the time components in ET
+  const fmtTime = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
+  const partsNowET = fmtTime.formatToParts(now).reduce((acc: Record<string, string>, p) => { acc[p.type] = p.value; return acc; }, {});
   
-  // Calculate the next midnight in Central Time
-  const nowInCTUtc = Date.UTC(Number(partsNowCT.year), Number(partsNowCT.month) - 1, Number(partsNowCT.day), Number(partsNowCT.hour), Number(partsNowCT.minute), Number(partsNowCT.second));
-  const todayMidnightCTUtc = Date.UTC(Number(partsNowCT.year), Number(partsNowCT.month) - 1, Number(partsNowCT.day), 0, 0, 0, 0);
-  const tomorrowMidnightCTUtc2 = todayMidnightCTUtc + 24 * 60 * 60 * 1000;
+  // Calculate the next midnight in Eastern Time
+  const nowInETUtc = Date.UTC(Number(partsNowET.year), Number(partsNowET.month) - 1, Number(partsNowET.day), Number(partsNowET.hour), Number(partsNowET.minute), Number(partsNowET.second));
+  const todayMidnightETUtc = Date.UTC(Number(partsNowET.year), Number(partsNowET.month) - 1, Number(partsNowET.day), 0, 0, 0, 0);
+  const tomorrowMidnightETUtc2 = todayMidnightETUtc + 24 * 60 * 60 * 1000;
   
-  // Calculate offset between now in CT and now in UTC
-  const offsetMs = now.getTime() - nowInCTUtc;
-  const nextMidnightCT = tomorrowMidnightCTUtc2 + offsetMs;
+  // Calculate offset between now in ET and now in UTC
+  const offsetMs = now.getTime() - nowInETUtc;
+  const nextMidnightET = tomorrowMidnightETUtc2 + offsetMs;
 
-  const timeBetween = nextMidnightCT - now.getTime();
+  const timeBetween = nextMidnightET - now.getTime();
 
   let timeBetweenInSecond = Math.floor(timeBetween/1000)
 

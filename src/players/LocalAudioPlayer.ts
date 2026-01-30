@@ -41,9 +41,9 @@ export class LocalAudioPlayer extends Player {
         if ('mediaSession' in navigator) {
             const baseUrl = window.location.origin;
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: 'Matthew Parker Heardle',
-                artist: 'Guess the song!',
-                album: 'Music Quiz Game',
+                title: 'Walmart',
+                artist: 'Matthew Parker',
+                album: 'Walmart',
                 artwork: [
                     { src: `${baseUrl}/favicon.ico`, sizes: '48x48', type: 'image/x-icon' },
                     { src: `${baseUrl}/favicon.ico`, sizes: '96x96', type: 'image/x-icon' },

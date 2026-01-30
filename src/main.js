@@ -88,21 +88,21 @@ if(settings["infinite"]){
 } else {
         const currentDate = new Date();
 
-        function daysSinceStartInCT(startISO) {
+        function daysSinceStartInET(startISO) {
             const now = new Date();
-            const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: 'numeric', day: 'numeric' });
+            const fmt = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'numeric', day: 'numeric' });
             const partsNow = fmt.formatToParts(now).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
 
             const startDate = startISO ? new Date(startISO) : new Date(0);
             const partsStart = fmt.formatToParts(startDate).reduce((acc, p) => { acc[p.type] = p.value; return acc; }, {});
 
-            const nowMidCTUtc = Date.UTC(Number(partsNow.year), Number(partsNow.month) - 1, Number(partsNow.day));
-            const startMidCTUtc = Date.UTC(Number(partsStart.year), Number(partsStart.month) - 1, Number(partsStart.day));
+            const nowMidETUtc = Date.UTC(Number(partsNow.year), Number(partsNow.month) - 1, Number(partsNow.day));
+            const startMidETUtc = Date.UTC(Number(partsStart.year), Number(partsStart.month) - 1, Number(partsStart.day));
 
-            return Math.floor((nowMidCTUtc - startMidCTUtc) / 86400000);
+            return Math.floor((nowMidETUtc - startMidETUtc) / 86400000);
         }
 
-        id = daysSinceStartInCT(settings["start-date"]);
+        id = daysSinceStartInET(settings["start-date"]);
         listIndex = id % music.length;
 
     const usString = localStorage.getItem("userStats");
