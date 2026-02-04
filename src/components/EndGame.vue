@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
-import SoundcloudMusicLink from "@/components/SoundcloudMusicLink.vue";
 import GuessSummary from "@/components/GuessSummary.vue";
 import IconShare from "@/components/icons/IconShare.vue";
 
@@ -152,8 +151,6 @@ setInterval(()=>{
 <template>
   <div class="max-w-screen-sm main-container">
     <div v-if="currentGameState.guessed.length > 0" class="end-content">
-      <SoundcloudMusicLink :is-won="currentGameState.guessed[currentGameState.guessed.length-1].isCorrect"/>
-      
       <div class="summary-container">
         <p class="guess-number font-big"> 
           {{ currentGameState.guessed[currentGameState.guessed.length-1].isCorrect ? currentGameState.guessed.length.toString() : '0' }} 

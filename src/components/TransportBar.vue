@@ -4,7 +4,6 @@ import IconPlay from "@/components/icons/IconPlay.vue";
 import IconPlaying from "@/components/icons/IconPlaying.vue";
 
 import settings from "@/settings/settings.json"
-import {SoundcloudPlayer} from "@/players/SoundcloudPlayer";
 import {YoutubeMusicPlayer} from "@/players/YoutubePlayer";
 import {LocalAudioPlayer} from "@/players/LocalAudioPlayer";
 
@@ -75,8 +74,6 @@ onMounted(()=>{
       ? `/api/audio?id=${SelectedMusic.id}`
       : `/audio/${SelectedMusic.id}.mp3`;
     player = new LocalAudioPlayer(audioUrl);
-  } else if(SelectedMusic.url.indexOf("soundcloud.com") !== -1) {
-    player = new SoundcloudPlayer(SelectedMusic.url);
   } else if (SelectedMusic.url.indexOf("youtube.com") !== -1) {
     // Use YouTube for full song (after game finished or no local audio)
     player = new YoutubeMusicPlayer(SelectedMusic.url);
@@ -115,6 +112,10 @@ onMounted(()=>{
 onUnmounted(()=>{
   clearInterval(seekBarInterval);
   clearInterval(sepSelectInterval);
+
+  if (player && typeof player.Destroy === 'function') {
+    player.Destroy();
+  }
 })
 
 function ButtonClick(){
@@ -202,9 +203,6 @@ function getUnlockedBarWidth() : number{
 </template>
 
 <style scoped>
-.playbar {
-}
-
 #seekbar {
   background-color: var(--color-positive);
   height: 100%;
