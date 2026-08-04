@@ -7,7 +7,7 @@ import settings from "@/settings/settings.json"
 import {YoutubeMusicPlayer} from "@/players/YoutubePlayer";
 import {LocalAudioPlayer} from "@/players/LocalAudioPlayer";
 
-import {currentGameState, SelectedMusic} from "@/main"
+import {currentGameState, SelectedMusic} from "@/game"
 import {Player} from "@/players/PlayerBase";
 
 const isPlaying = ref(false);
@@ -18,11 +18,14 @@ let isFinished = ref(false);
 
 let lengthInSecond = ref(0);
 
+let seekBarWasReset = false;
+
 let seekBarInterval = setInterval(() => {
   const sb = document.getElementById('seekbar');
   const item1 = document.getElementsByClassName('item1')[0];
 
   if(isPlaying.value){
+    seekBarWasReset = false;
     let percentage = 0;
     if(isFinished.value){
       player.GetCurrentMusicLength((n: number)=>{
@@ -46,24 +49,12 @@ let seekBarInterval = setInterval(() => {
       });
     }
 
-  } else {
+  } else if(!seekBarWasReset) {
+    // Only clear the bar on the transition to idle, not on every tick.
     sb.style.width = '0%';
+    seekBarWasReset = true;
   }
 }, 20);
-
-let sepSelectInterval = setInterval(() => {
-  if(!isFinished){
-    const bar = document.getElementById("bar");
-    for(let i = 0; i < bar.children.length; i++){
-      const child = bar.children[i+1];
-      if(child !== undefined)
-      child.classList.remove("sep-selected");
-      if(i === currentGameState.value.guess){
-        child.classList.add("sep-selected");
-      }
-    }
-  }
-}, 30);
 
 onMounted(()=>{
   // During gameplay, use local 32-second clips to prevent spoilers
@@ -111,7 +102,6 @@ onMounted(()=>{
 
 onUnmounted(()=>{
   clearInterval(seekBarInterval);
-  clearInterval(sepSelectInterval);
 
   if (player && typeof player.Destroy === 'function') {
     player.Destroy();
@@ -124,10 +114,7 @@ function ButtonClick(){
 }
 
 function Play(){
-  const button = document.getElementById("play-button");
   const icon = document.getElementById("icon");
-
-  console.log(SelectedMusic.title);
 
   isPlaying.value = true;
 
@@ -144,7 +131,6 @@ function Play(){
 }
 
 function Stop(){
-  const button = document.getElementById("play-button");
   const icon = document.getElementById("icon");
 
   isPlaying.value = false;

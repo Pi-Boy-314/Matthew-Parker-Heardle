@@ -36,3 +36,7 @@ public/audio/*.wav
 public/audio/*.m4a
 .vercel
 .env*.local
+
+# Python virtualenv for tools/ scripts (yt-dlp)
+.venv
+.env*
