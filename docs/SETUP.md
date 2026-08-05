@@ -125,11 +125,63 @@ sudo apt-get install ffmpeg
 
 ---
 
+## Adding Newly Released Songs
+
+When Matthew Parker puts out new music, `tools/sync_music.py` finds it and adds
+it for you. You do not need to hand-edit `music.json`.
+
+```bash
+python tools/sync_music.py                    # dry run - show what's new
+python tools/sync_music.py --apply            # add the new tracks
+python tools/download_audio.py                # fetch their 32s clips
+```
+
+**What it does:**
+- Reads the artist's full release list from the Deezer API
+- Skips anything already present in `music.json`
+- Finds each new track on YouTube and fills in `title`, `url`, `art`, `album`, `id`
+- Prints a report and writes nothing unless you pass `--apply`
+
+**How it matches YouTube reliably.** It lists the artist's channel in one pass
+and matches against that, rather than running a per-track YouTube search --
+search returns unrelated videos surprisingly often. A match is only accepted
+when the normalized titles agree *and* the runtimes are within 12 seconds of
+Deezer's. Guest credits are stripped first, since `music.json` stores a bare
+`Spark` where YouTube has `Spark (feat. Rapture Ruckus)`. Collabs hosted on a
+partner's channel (`Dream Label Group - Matthew Parker - ...`) are handled too.
+Anything it cannot match confidently is reported for you to add by hand rather
+than guessed at -- a wrong URL means the wrong song plays.
+
+**Useful flags:**
+
+| Flag | Effect |
+|---|---|
+| `--since YYYY-MM-DD` | Only consider releases on/after this date (faster) |
+| `--apply` | Actually write to `music.json` |
+| `--verify` | Check every URL already in `music.json` still resolves |
+| `--repair` | Find replacement URLs for videos that have been taken down |
+
+**Run `--repair` occasionally.** YouTube videos get removed, and a dead URL
+breaks both the clip download and the post-game reveal for that song, silently.
+14 entries were broken this way before it was written:
+
+```bash
+python tools/sync_music.py --repair           # dry run
+python tools/sync_music.py --repair --apply   # write the replacements
+```
+
+**Note on instrumentals.** `TITLE_SKIP` in the script excludes them. Their
+backing track is the same recording as the vocal version already in the list, so
+a 32-second clip of one is hard to tell from the other -- an unfair round rather
+than a hard one. Remove the entry from `TITLE_SKIP` if you want them.
+
+---
+
 ## Audio Download
 
 ### Download All Tracks
 
-Run this to download all 88 songs from YouTube:
+Run this to download every song in `music.json` from YouTube:
 
 ```bash
 python tools/download_audio.py
@@ -223,7 +275,8 @@ Vercel will build and deploy your frontend. Audio files will be handled in the n
 
 ### Step 3: Deploy with Audio Files
 
-**Option 1: Vercel CLI (Recommended)**
+**The CLI is the only way to deploy this project.** Deploying from a git push
+is deliberately turned off -- see the warning below.
 
 ```bash
 # Install Vercel CLI (if not already)
@@ -239,19 +292,26 @@ vercel link
 vercel --prod
 ```
 
-The CLI automatically includes `public/audio/` files in the deployment.
+The CLI uploads `public/audio/` along with everything else, using
+`.vercelignore` to decide what to exclude.
 
-**Option 2: Git Push (Automatic)**
+> **⚠️ Why git pushes must not deploy**
+>
+> The 32-second clips in `public/audio/` are excluded by `.gitignore`, so they
+> do not exist in the GitHub repository. A build triggered from GitHub would
+> therefore produce a site where `/api/audio` returns 404 for every song -- all
+> 188 tracks silent -- and it would replace the working deployment.
+>
+> To prevent that, `vercel.json` sets:
+>
+> ```json
+> "git": { "deploymentEnabled": false }
+> ```
+>
+> Push to GitHub freely; it will not touch production. When you actually want
+> to ship, run `vercel --prod`.
 
-Once linked, simply push to GitHub:
-
-```bash
-git push origin main
-```
-
-Vercel auto-deploys on push. However, audio files are in `.gitignore`, so you must use Vercel CLI or upload them separately.
-
-**Option 3: Manual Upload via Vercel Dashboard**
+**Alternative: Manual Upload via Vercel Dashboard**
 
 1. After initial deployment, go to Vercel dashboard
 2. Click your project

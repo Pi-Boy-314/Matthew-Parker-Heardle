@@ -1,5 +1,18 @@
 # Matthew Parker ingestion scripts
 
+> **⚠️ Superseded by `tools/sync_music.py` for routine updates.**
+>
+> To add newly released songs, use `python tools/sync_music.py --apply`. It adds
+> only what is missing instead of rebuilding the file, so existing `id` values --
+> which are the audio filenames in `public/audio/` -- cannot shift. It also picks
+> YouTube URLs by matching against the artist's channel listing with a runtime
+> check, where step 3 below relies on a fuzzy search score alone; YouTube search
+> returns unrelated videos often enough that this matters.
+>
+> This pipeline is kept because it is still the better tool for **bootstrapping a
+> brand-new Heardle from scratch**, where a full rebuild with manual review at
+> each stage is exactly what you want.
+
 This folder contains a four-step pipeline to rebuild `src/settings/music.json` with Matthew Parker's catalog. Each step is isolated so you can inspect and fix data before moving on.
 
 ## Setup
